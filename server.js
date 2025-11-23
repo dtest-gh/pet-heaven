@@ -28,14 +28,20 @@ const CORS_ORIGIN = process.env.CORS_ORIGIN || "http://localhost:3000";
 // ------------------------------
 // CORS
 // ------------------------------
-app.use(
-  cors({
-    origin: CORS_ORIGIN,
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    allowedHeaders: ["Content-Type"],
-  })
-);
+const allowedOrigins = [
+  /\.netlify\.app$/  // allow all Netlify deploys
+];
+
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.some(pattern => pattern.test(origin))) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true,
+}));
 
 // ------------------------------
 // MongoDB Connection
