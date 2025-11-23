@@ -103,13 +103,13 @@ app.post("/login", async (req, res) => {
     if (!result) return res.json({ success: false, message: "Password is incorrect." });
 
     const token = jwt.sign({ email: user.email }, JWT_SECRET, { expiresIn: "1d" });
-    res.cookie("token", token, { httpOnly: true, secure: false, sameSite: "lax" });
+    res.cookie("token", token, { httpOnly: true, secure: true, sameSite: "none" });
 
     const refreshToken = jwt.sign({ email: user.email }, REFRESH_SECRET, { expiresIn: "7d" });
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
-      secure: false,
-      sameSite: "lax",
+      secure: true,
+      sameSite: "none",
       path: "/",
     });
 
